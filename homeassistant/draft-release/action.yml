@@ -7,11 +7,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
-        fetch-depth: 0
     - name: Retrieve manifest information
       id: manifest
       run: |

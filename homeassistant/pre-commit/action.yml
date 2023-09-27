@@ -1,0 +1,36 @@
+name: pre-commit
+
+inputs:
+  python-version:
+    required: true
+  python-cache-version:
+    required: false
+    default: '1'
+
+runs:
+  using: composite
+  steps:
+    - name: Install Python
+      id: python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Cache Python packages
+      id: cache-python
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-python-${{ inputs.python-cache-version }}
+    - name: Install pre-commit
+      run: python -m pip install --upgrade --upgrade-strategy eager pre-commit
+    - name: Cache pre-commit dependencies
+      id: cache-precommit
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pre-commit
+        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Install pre-commit dependencies
+      if: steps.cache-precommit.outputs.cache-hit != 'true'
+      run: pre-commit install-hooks
+    - name: Run pre-commit against all files
+      run: pre-commit run --all-files

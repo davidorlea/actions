@@ -1,6 +1,8 @@
 name: draft-release
 
 inputs:
+  github-token:
+    required: true
   component-name:
     required: true
 
@@ -27,7 +29,7 @@ runs:
       if: steps.git-tag.outputs.exists != 'true'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.github-token }}
         script: |
           const { owner, repo } = context.repo;
           try {
@@ -45,7 +47,7 @@ runs:
       if: steps.git-tag.outputs.exists != 'true'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.github-token }}
         script: |
           const { owner, repo } = context.repo;
           try {
@@ -71,7 +73,7 @@ runs:
       if: steps.git-tag.outputs.exists != 'true'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.github-token }}
         script: |
           const fs = require('fs').promises;
           const { owner, repo } = context.repo;

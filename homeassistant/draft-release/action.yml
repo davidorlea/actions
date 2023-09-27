@@ -9,10 +9,12 @@ runs:
   steps:
     - name: Retrieve manifest information
       id: manifest
+      shell: bash
       run: |
         version=$(jq -r '.version' ./custom_components/${{ inputs.component-name }}/manifest.json)
         echo "version=$version" >> $GITHUB_OUTPUT
     - name: Check for Git tag
+      shell: bash
       id: git-tag
       run: |
         TAG="v${{ steps.manifest.outputs.version }}"
@@ -61,6 +63,7 @@ runs:
           }
     - name: Create zip file
       if: steps.git-tag.outputs.exists != 'true'
+      shell: bash
       run: |
         cd ./custom_components/${{ inputs.component-name }}
         zip ${{ inputs.component-name }}.zip -r ./

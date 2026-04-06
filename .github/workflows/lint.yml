@@ -22,4 +22,4 @@ jobs:
       - name: Run pre-commit
         uses: ./homeassistant/pre-commit
         with:
-          python-version: '3.12'
+          python-version: '3.14'

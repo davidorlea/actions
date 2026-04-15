@@ -29,7 +29,7 @@ runs:
       uses: actions/cache@v5.0.4
       with:
         path: ~/.cache/prek
-        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-prek-${{ hashFiles('prek.toml) }}
+        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-prek-${{ hashFiles('prek.toml') }}
     - name: Install prek dependencies
       if: steps.cache-prek.outputs.cache-hit != 'true'
       shell: bash

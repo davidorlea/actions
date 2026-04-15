@@ -1,0 +1,39 @@
+name: prek
+
+inputs:
+  python-version:
+    required: true
+  python-cache-version:
+    required: false
+    default: '1'
+
+runs:
+  using: composite
+  steps:
+    - name: Install Python
+      id: python
+      uses: actions/setup-python@v6.2.0
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Cache Python packages
+      id: cache-python
+      uses: actions/cache@v5.0.4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-python-${{ inputs.python-cache-version }}
+    - name: Install prek
+      shell: bash
+      run: python -m pip install --upgrade --upgrade-strategy eager prek
+    - name: Cache prek dependencies
+      id: cache-prek
+      uses: actions/cache@v5.0.4
+      with:
+        path: ~/.cache/prek
+        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-prek-${{ hashFiles('prek.toml) }}
+    - name: Install prek dependencies
+      if: steps.cache-prek.outputs.cache-hit != 'true'
+      shell: bash
+      run: prek prepare-hooks
+    - name: Run prek against all files
+      shell: bash
+      run: prek run --all-files

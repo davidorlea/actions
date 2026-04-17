@@ -1,25 +1,12 @@
 name: prek
 
-inputs:
-  python-version:
-    required: true
-  python-cache-version:
-    required: false
-    default: '1'
-
 runs:
   using: composite
   steps:
     - name: Install Python
-      id: python
       uses: actions/setup-python@v6.2.0
       with:
-        python-version: ${{ inputs.python-version }}
-    - name: Cache Python packages
-      id: cache-python
-      uses: actions/cache@v5.0.4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-python-${{ inputs.python-cache-version }}
+        python-version-file: "pyproject.toml"
+        check-latest: true
     - name: Run prek
       uses: j178/prek-action@v2.0.2
